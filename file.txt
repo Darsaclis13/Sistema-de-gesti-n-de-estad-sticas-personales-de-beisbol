@@ -23,4 +23,106 @@ class PlayerStats(db.Model):
     at_bats = db.Column(db.Integer, nullable=False)
     hits = db.Column(db.Integer, nullable=False)
     home_runs = db.Column(db.Integer, nullable=False)
-    walks = db.Column(db.Integer, nullable=False)  
+    walks = db.Column(db.Integer, nullable=False)
+# Funciones CRUD para Team
+
+@app.route('/team', methods=['POST'])
+def create_team():
+    data = request.get_json()
+    new_team = Team(name=data['name'])
+    db.session.add(new_team)
+    db.session.commit()
+    return jsonify(new_team.id), 201
+
+@app.route('/team/<int:team_id>', methods=['GET'])
+def get_team(team_id):
+    team = Team.query.get_or_404(team_id)
+    return jsonify({'name': team.name})
+
+@app.route('/team/<int:team_id>', methods=['PUT'])
+def update_team(team_id):
+    team = Team.query.get_or_404(team_id)
+    data = request.get_json()
+    team.name = data['name']
+    db.session.commit()
+    return jsonify({'name': team.name})
+
+@app.route('/team/<int:team_id>', methods=['DELETE'])
+def delete_team(team_id):
+    team = Team.query.get_or_404(team_id)
+    db.session.delete(team)
+    db.session.commit()
+    return jsonify({'message': 'Equipo eliminado.'}), 200
+
+# Funciones CRUD para Player
+
+@app.route('/player', methods=['POST'])
+def create_player():
+    data = request.get_json()
+    new_player = Player(name=data['name'], team_id=data['team_id'])
+    db.session.add(new_player)
+    db.session.commit()
+    return jsonify(new_player.id), 201
+
+@app.route('/player/<int:player_id>', methods=['GET'])
+def get_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    return jsonify({'name': player.name, 'team_id': player.team_id})
+
+@app.route('/player/<int:player_id>', methods=['PUT'])
+def update_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    data = request.get_json()
+    player.name = data['name']
+    player.team_id = data['team_id']
+    db.session.commit()
+    return jsonify({'name': player.name, 'team_id': player.team_id})
+
+@app.route('/player/<int:player_id>', methods=['DELETE'])
+def delete_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    db.session.delete(player)
+    db.session.commit()
+    return jsonify({'message': 'Jugador eliminado.'}), 200
+
+# Funciones CRUD para PlayerStats
+
+@app.route('/stats', methods=['POST'])
+def create_stat():
+    data = request.get_json()
+    new_stat = PlayerStats(
+        player_id=data['player_id'],
+        game_date=datetime.strptime(data['game_date'], '%Y-%m-%d'),
+        at_bats=data['at_bats'],
+        hits=data['hits'],
+        home_runs=data['home_runs'],
+        walks=data['walks']
+    )
+    db.session.add(new_stat)
+    db.session.commit()
+    return jsonify(new_stat.to_dict()), 201
+
+@app.route('/stats/<int:stat_id>', methods=['GET'])
+def get_stat(stat_id):
+    stat = PlayerStats.query.get_or_404(stat_id)
+    return jsonify(stat.to_dict())
+
+@app.route('/stats/<int:stat_id>', methods=['PUT'])
+def update_stat(stat_id):
+    stat = PlayerStats.query.get_or_404(stat_id)
+    data = request.get_json()
+    stat.player_id = data['player_id']
+    stat.game_date = datetime.strptime(data['game_date'], '%Y-%m-%d')
+    stat.at_bats = data['at_bats']
+    stat.hits = data['hits']
+    stat.home_runs = data['home_runs']
+    stat.walks = data['walks']
+    db.session.commit()
+    return jsonify(stat.to_dict())
+
+@app.route('/stats/<int:stat_id>', methods=['DELETE'])
+def delete_stat(stat_id):
+    stat = PlayerStats.query.get_or_404(stat_id)
+    db.session.delete(stat)
+    db.session.commit()
+    return jsonify({'message': 'Estadística eliminada.'}), 200
