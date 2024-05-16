@@ -1,0 +1,29 @@
+equipos
+https://darsaclis13.pythonanywhere.com/team
+para subir nuevos equipos a la api se utiliza la peticion Post y el parametro Json {'name': algo} 
+
+igual para modificar pero con la peticion PUT y el id del equipo en el link,
+
+para eliminar se utiliza la peticion Delete con el id del equipo en el link.
+
+y para visualizar, el link con el id del equipo y el metodo Get
+
+jugadores
+https://darsaclis13.pythonanywhere.com/player
+para agregar nuevos jugadores se utiliza el metodo Post con los parametros name y team_id,
+
+para modificar son los mismos parametros pero con metodo put y el id del jugador a modificar 
+
+para eliminar se utiliza el link con el id de jugador y el metodo delete
+
+y para ver se utiliza el link con el id del jugador y el metodo get
+
+estadisticas
+https://darsaclis13.pythonanywhere.com/stats
+para agregar nuevas estadisticas se utiliza el metodo Post con los parametros player_id, at_bats, hits, home_runs, walks.
+
+para modificar son los mismos parametros pero con metodo put y el id de la estadistica a modificar 
+
+para eliminar se utiliza el link con el id de la estadistica y el metodo delete
+
+y para ver se utiliza el link con el id de la estadistica y el metodo get
